@@ -1,0 +1,10 @@
+C:\Users\teoti\source\repos\WWHDR Permaloader\obj\Debug\WWHDR Permaloader.csproj.AssemblyReference.cache
+C:\Users\teoti\source\repos\WWHDR Permaloader\obj\Debug\WWHDR Permaloader.csproj.GenerateResource.cache
+C:\Users\teoti\source\repos\WWHDR Permaloader\obj\Debug\WWHDR Permaloader.csproj.CoreCompileInputs.cache
+C:\Users\teoti\source\repos\WWHDR Permaloader\obj\Debug\WWHDR_configloader.Form1.resources
+C:\Users\teoti\source\repos\WWHDR Permaloader\obj\Debug\WWHDR_configloader.Properties.Resources.resources
+C:\Users\teoti\source\repos\WWHDR Permaloader\bin\Debug\WWHDR Config loader.exe.config
+C:\Users\teoti\source\repos\WWHDR Permaloader\bin\Debug\WWHDR Config loader.exe
+C:\Users\teoti\source\repos\WWHDR Permaloader\bin\Debug\WWHDR Config loader.pdb
+C:\Users\teoti\source\repos\WWHDR Permaloader\obj\Debug\WWHDR Config loader.exe
+C:\Users\teoti\source\repos\WWHDR Permaloader\obj\Debug\WWHDR Config loader.pdb
