@@ -262,7 +262,15 @@ namespace WWHDR_configloader
 				MessageBox.Show("Please enter a path for the PC app");
 				return;
 			}
-			download(findWiiUPath() + "/config.yaml", pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "config.yaml");
+
+			if (configSwitch.Checked)
+			{
+				download(findWiiUPath() + "/config.yaml", pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "config.yaml");
+			}
+			if (preferencesSwitch.Checked)
+			{
+				download(findWiiUPath() + "/preferences.yaml", pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "preferences.yaml");
+			}
 			message.Text = "Success!";
 		}
 
@@ -278,12 +286,28 @@ namespace WWHDR_configloader
 				MessageBox.Show("Please enter a path for the PC app");
 				return;
 			}
-			if(!File.Exists(pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "config.yaml"))
+			if(!File.Exists(pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "config.yaml") && configSwitch.Enabled)
 			{
 				MessageBox.Show("The config file does not exists on your computer. Make sure that you opened and closed the app at least once.");
 				return;
 			}
-			upload(findWiiUPath() + "/config.yaml", pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "config.yaml");
+			if (!File.Exists(pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "preferences.yaml") && preferencesSwitch.Enabled)
+			{
+				MessageBox.Show("The preference file does not exists on your computer. Make sure that you opened and closed the app at least once.");
+				return;
+			}
+
+			if (configSwitch.Checked)
+			{
+				upload(findWiiUPath() + "/config.yaml", pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "config.yaml");
+			}
+
+			if (preferencesSwitch.Checked)
+			{
+				upload(findWiiUPath() + "/preferences.yaml", pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "preferences.yaml");
+			}
+
+			
 			message.Text = "Success!";
 		}
 
@@ -317,6 +341,34 @@ namespace WWHDR_configloader
 		private void button1_Click_1(object sender, EventArgs e)
 		{
 			MessageBox.Show(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern);
+		}
+
+		private void configSwitch_CheckedChanged(object sender, EventArgs e)
+		{
+			if(!preferencesSwitch.Checked && !configSwitch.Checked)
+			{
+				toPc.Enabled = false;
+				toWiiU.Enabled = false;
+			}
+			else
+			{
+				toPc.Enabled = true;
+				toWiiU.Enabled = true;
+			}
+		}
+
+		private void preferencesSwitch_CheckedChanged(object sender, EventArgs e)
+		{
+			if (!preferencesSwitch.Checked && !configSwitch.Checked)
+			{
+				toPc.Enabled = false;
+				toWiiU.Enabled = false;
+			}
+			else
+			{
+				toPc.Enabled = true;
+				toWiiU.Enabled = true;
+			}
 		}
 	}
 }

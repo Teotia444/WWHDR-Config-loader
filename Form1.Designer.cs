@@ -38,6 +38,8 @@
 			this.ipCheck = new System.Windows.Forms.Button();
 			this.fileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.message = new System.Windows.Forms.Label();
+			this.configSwitch = new System.Windows.Forms.CheckBox();
+			this.preferencesSwitch = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// wiiuIpTextbox
@@ -50,7 +52,7 @@
 			// 
 			// toWiiU
 			// 
-			this.toWiiU.Location = new System.Drawing.Point(56, 256);
+			this.toWiiU.Location = new System.Drawing.Point(56, 288);
 			this.toWiiU.Name = "toWiiU";
 			this.toWiiU.Size = new System.Drawing.Size(210, 56);
 			this.toWiiU.TabIndex = 1;
@@ -69,7 +71,7 @@
 			// 
 			// toPc
 			// 
-			this.toPc.Location = new System.Drawing.Point(56, 186);
+			this.toPc.Location = new System.Drawing.Point(56, 228);
 			this.toPc.Name = "toPc";
 			this.toPc.Size = new System.Drawing.Size(210, 54);
 			this.toPc.TabIndex = 3;
@@ -128,11 +130,39 @@
 			this.message.Size = new System.Drawing.Size(0, 13);
 			this.message.TabIndex = 8;
 			// 
+			// configSwitch
+			// 
+			this.configSwitch.AutoSize = true;
+			this.configSwitch.Checked = true;
+			this.configSwitch.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.configSwitch.Location = new System.Drawing.Point(56, 182);
+			this.configSwitch.Name = "configSwitch";
+			this.configSwitch.Size = new System.Drawing.Size(176, 17);
+			this.configSwitch.TabIndex = 9;
+			this.configSwitch.Text = "Transfer config.yaml (Permalink)";
+			this.configSwitch.UseVisualStyleBackColor = true;
+			this.configSwitch.CheckedChanged += new System.EventHandler(this.configSwitch_CheckedChanged);
+			// 
+			// preferencesSwitch
+			// 
+			this.preferencesSwitch.AutoSize = true;
+			this.preferencesSwitch.Checked = true;
+			this.preferencesSwitch.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.preferencesSwitch.Location = new System.Drawing.Point(56, 205);
+			this.preferencesSwitch.Name = "preferencesSwitch";
+			this.preferencesSwitch.Size = new System.Drawing.Size(214, 17);
+			this.preferencesSwitch.TabIndex = 10;
+			this.preferencesSwitch.Text = "Transfer preferences.yaml (Preferences)";
+			this.preferencesSwitch.UseVisualStyleBackColor = true;
+			this.preferencesSwitch.CheckedChanged += new System.EventHandler(this.preferencesSwitch_CheckedChanged);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(312, 356);
+			this.Controls.Add(this.preferencesSwitch);
+			this.Controls.Add(this.configSwitch);
 			this.Controls.Add(this.message);
 			this.Controls.Add(this.ipCheck);
 			this.Controls.Add(this.button3);
@@ -164,6 +194,8 @@
 		private System.Windows.Forms.Button ipCheck;
 		private System.Windows.Forms.OpenFileDialog fileDialog;
 		private System.Windows.Forms.Label message;
+		private System.Windows.Forms.CheckBox configSwitch;
+		private System.Windows.Forms.CheckBox preferencesSwitch;
 	}
 }
 
