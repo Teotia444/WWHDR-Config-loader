@@ -304,7 +304,7 @@ namespace WWHDR_configloader
 			{
 				download(findWiiUPath() + "/preferences.yaml", removeLastDir(pathTextbox.Text) + "/preferences.yaml");
 			}
-			message.Text = "Success!";
+			message.Text = "Successfully recieved the file!";
 		}
 
 		string removeLastDir(string path)
@@ -358,7 +358,7 @@ namespace WWHDR_configloader
 			}
 
 			
-			message.Text = "Success!";
+			message.Text = "Successfully sent the file!";
 		}
 
 		private void wiiuIpTextbox_TextChanged(object sender, EventArgs e)

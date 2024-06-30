@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("WWHDR Permaloader")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("WWHDR Config loader")]
+[assembly: AssemblyDescription("Transfer your permalink or your preferences to your Wii U")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WWHDR Permaloader")]
+[assembly: AssemblyCompany("Teotia444")]
+[assembly: AssemblyProduct("WWHDR Config loader")]
 [assembly: AssemblyCopyright("Copyright ©  2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
