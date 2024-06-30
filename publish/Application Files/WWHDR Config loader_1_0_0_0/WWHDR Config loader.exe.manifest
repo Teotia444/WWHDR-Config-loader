@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="WWHDR Config loader.exe" version="1.0.0.0" publicKeyToken="5d67031da19eb43f" language="neutral" processorArchitecture="msil" type="win32" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="WWHDR Config loader" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="WWHDR Config loader.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          Options de manifeste UAC
+          Pour changer le niveau du contrôle de compte d'utilisateur Windows, remplacez le
+          nœud requestedExecutionLevel par l'une des propositions suivantes.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         Pour utiliser la virtualisation des fichiers et du Registre afin d'assurer
+         une compatibilité ascendante, supprimez le nœud requestedExecutionLevel.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WWHDR Config loader.exe" size="19352">
+      <assemblyIdentity name="WWHDR Config loader" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>p5gFoOVj0efHU0DRvacBcuIzOQseposmtt74ZGhHDE8=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="WWHDR Config loader.exe.config" size="1045">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>agNyCkJUHW2fA+uqg+z7fVaIY6w/p9yy8FKpDkpeaL8=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=LEO\teoti" issuerKeyHash="7ae6e07a8f023203b35437c2949ab8dd2a0e70ae" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>wTr5SvNa9sqsg0o1QIJlWW3eHBafeemwNqbCeYirFnI=</DigestValue></Reference></SignedInfo><SignatureValue>QO3pw7/hOvjKVOnqSPCn246jjjDrlkST38Jw2wpKOcvFINuIqXeaQDJha+zYoaZW93gU4B8Wpucxf3s0zN+EcJkLm8N/KbE7ndYikKHnVh68ARrIYdTJWeNA6/JHznYqhe6oNZhTyIG7Jeg4lPWWovxdF44qETT+HYGHUYZAMCc=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>nV3VHh7vw2tIWmKlC7fB+vOrMnhYNkZDs67aRBJB4oY3hI/vc+WSf1//dnIqJSkUHwxmRPVSY7XH0/29w53HiDbqo+vn64WPApeRX83GlMy3bjx+lmLrqK+nAJGj3FnTpxLM0+GmIyrjmYePL9cqjSe4pWkvZd5F1vn/qZum/v0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="7216ab8879c2a636b0e9799f161cde6d59658240354a83accaf65af34af93ac1" Description="" Url=""><as:assemblyIdentity name="WWHDR Config loader.exe" version="1.0.0.0" publicKeyToken="5d67031da19eb43f" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=LEO\teoti</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>WKeubIY15PAyuhIHEa0Wr+BGkiUL8E8DiR/HuxREH4w=</DigestValue></Reference></SignedInfo><SignatureValue>jeCpzX6klM1+dNaGw/Q2kRBXZH2JFd6W4GlcqRSDFtsVxTvVtublVKX+7f+rGLN8+khwetn4V2VB5eW3BTeL7n2pNdW93Qtjil56h+szN6a09TrFMxDmTdXCn9j2nEMtKIhdhwK7UH5eboUdkeadUF1i2Cau5MEHqTMOlgYH9fk=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>nV3VHh7vw2tIWmKlC7fB+vOrMnhYNkZDs67aRBJB4oY3hI/vc+WSf1//dnIqJSkUHwxmRPVSY7XH0/29w53HiDbqo+vn64WPApeRX83GlMy3bjx+lmLrqK+nAJGj3FnTpxLM0+GmIyrjmYePL9cqjSe4pWkvZd5F1vn/qZum/v0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIBvTCCASagAwIBAgIQFaDUe1APmoNOOpa3g6AvljANBgkqhkiG9w0BAQsFADAdMRswGQYDVQQDHhIATABFAE8AXAB0AGUAbwB0AGkwHhcNMjQwNjMwMTEzNTAxWhcNMjUwNjMwMTczNTAxWjAdMRswGQYDVQQDHhIATABFAE8AXAB0AGUAbwB0AGkwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAJ1d1R4e78NrSFpipQu3wfrzqzJ4WDZGQ7Ou2kQSQeKGN4SP73Plkn9f/3ZyKiUpFB8MZkT1UmO1x9P9vcOdx4g26qPr5+uFjwKXkV/NxpTMt248fpZi66ivpwCRo9xZ06cSzNPhpiMq45mHjy/XKo0nuKVpL2XeRdb5/6mbpv79AgMBAAEwDQYJKoZIhvcNAQELBQADgYEAcjQlgrg7+ARSTpcpVuuJNznr6ME95f87TCGLBNG5X/trO5Tl2daSQKzFapCcupLVZ9es4mLdQQjhqmgxG2jf5tDPKMclxYDUzUQGyy/2eCY/8xnoF9lfMJHdtRfg8zT6qZy/+YZc2YQ1sYOZuIgNb9o82eII6gIfAXpxQ1WFkTg=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

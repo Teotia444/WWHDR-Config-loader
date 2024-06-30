@@ -55,9 +55,9 @@ namespace WWHDR_configloader
 			Regex regex = new Regex(pattern);
 			IFormatProvider culture = CultureInfo.GetCultureInfo("en-us");
 			string[] hourMinFormats =
-				new[] { "MMM dd HH:mm", "MMM dd H:mm", "MMM dd HH:mm", "MMM dd H:mm" };
+				new[] { "MMM dd HH:mm", "MMM dd H:mm", "MMM d HH:mm", "MMM d H:mm" };
 			string[] yearFormats =
-				new[] { "MMM dd yyyy", "MMM dd yyyy" };
+				new[] { "MMM dd yyyy", "MMM d yyyy" };
 
 			List<string> infos = new List<string>();
 			List<DateTime> dates = new List<DateTime>();
@@ -72,8 +72,24 @@ namespace WWHDR_configloader
 				long size = long.Parse(match.Groups[5].Value, culture);
 				string s = Regex.Replace(match.Groups[6].Value, @"\s+", " ");
 
-				string[] formats = (s.IndexOf(':') >= 0) ? hourMinFormats : yearFormats;
-				dates.Add(DateTime.ParseExact(s, formats, culture, DateTimeStyles.None));
+
+
+				string[] formats = new string[0];
+				formats = (s.IndexOf(':') >= 0) ? hourMinFormats : yearFormats;
+				if (formats == null)
+				{
+					formats[0] = "MMM dd yyyy";
+					formats[1] = "MMM dd HH:mm";
+				}
+				try
+				{
+					dates.Add(DateTime.ParseExact(s, formats, culture, DateTimeStyles.None));
+				}
+				catch (Exception ex)
+				{
+					dates.Add(new DateTime(2024, 6, 16));
+					Console.WriteLine(ex.ToString());
+				}
 				string name = match.Groups[7].Value;
 				infos.Add(name);
 				
@@ -125,14 +141,16 @@ namespace WWHDR_configloader
 			{ 
 				string pathRecent = "";
 				pathRecent = "B318AE3B (TWWHD Randomizer)";
-				DateTime dateRecent = new DateTime(1970, 01, 01, 01, 00, 00);
+				
+				DateTime dateRecent = new DateTime(1970, 01, 01, 01, 01, 00);
+				
 				Console.WriteLine(wiiufolderName.Length);
 				for (int i = 0; i<wiiufolderName.Length; i++)
 				{
 					Console.WriteLine(wiiufolderName[i]);
 					if (wiiufolderName[i].Contains("(TWWHD Randomizer)"))
 					{
-
+						
 						if (wiiufolderDateTime[i] > dateRecent)
 						{
 							pathRecent = wiiufolderName[i];
@@ -150,7 +168,7 @@ namespace WWHDR_configloader
 		{
 			try
 			{
-				if(remoteFile == "ErrNoFolderFound/config.yaml") {
+				if(remoteFile == "ErrNoFolderFound/config.yaml" || remoteFile == "ErrNoFolderFound/preferences.yaml") {
 					return;
 				}
 				/* Create an FTP Request */
@@ -181,14 +199,29 @@ namespace WWHDR_configloader
 						bytesRead = ftpStream.Read(byteBuffer, 0, 2048);
 					}
 				}
-				catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+				catch (WebException ex)
+				{
+					var a = ex.Response as FtpWebResponse;
+					if(a.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailableOrBusy)
+					{
+						MessageBox.Show("Error : File(s) does not exists");
+					}
+					
+				}
+
 				/* Resource Cleanup */
 				localFileStream.Close();
 				ftpStream.Close();
 				ftpResponse.Close();
 				ftpRequest = null;
 			}
-			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+			catch (WebException ex) {
+				var a = ex.Response as FtpWebResponse;
+				if (a.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailableOrBusy)
+				{
+					MessageBox.Show("Error : File does not exists. This can happen if you never created a preferences.yaml or config.yaml file on your Wii U.");
+				}
+			}
 			return;
 		}
 		public void upload(string remoteFile, string localFile)
@@ -265,14 +298,31 @@ namespace WWHDR_configloader
 
 			if (configSwitch.Checked)
 			{
-				download(findWiiUPath() + "/config.yaml", pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "config.yaml");
+				download(findWiiUPath() + "/config.yaml", removeLastDir(pathTextbox.Text) + "/config.yaml");
 			}
 			if (preferencesSwitch.Checked)
 			{
-				download(findWiiUPath() + "/preferences.yaml", pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "preferences.yaml");
+				download(findWiiUPath() + "/preferences.yaml", removeLastDir(pathTextbox.Text) + "/preferences.yaml");
 			}
 			message.Text = "Success!";
 		}
+
+		string removeLastDir(string path)
+		{
+			if (path.Contains("/"))
+			{
+				return path.Substring(0, path.LastIndexOf("/"));
+			}
+			else if (path.Contains("\\"))
+			{
+				return path.Substring(0, path.LastIndexOf("\\"));
+			}
+			else
+			{
+				return path;
+			}
+		}
+
 
 		private void toWiiU_Click(object sender, EventArgs e)
 		{
@@ -286,12 +336,12 @@ namespace WWHDR_configloader
 				MessageBox.Show("Please enter a path for the PC app");
 				return;
 			}
-			if(!File.Exists(pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "config.yaml") && configSwitch.Enabled)
+			if(!File.Exists(removeLastDir(pathTextbox.Text) + "/config.yaml") && configSwitch.Enabled)
 			{
 				MessageBox.Show("The config file does not exists on your computer. Make sure that you opened and closed the app at least once.");
 				return;
 			}
-			if (!File.Exists(pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "preferences.yaml") && preferencesSwitch.Enabled)
+			if (!File.Exists(removeLastDir(pathTextbox.Text) + "/preferences.yaml") && preferencesSwitch.Enabled)
 			{
 				MessageBox.Show("The preference file does not exists on your computer. Make sure that you opened and closed the app at least once.");
 				return;
@@ -299,12 +349,12 @@ namespace WWHDR_configloader
 
 			if (configSwitch.Checked)
 			{
-				upload(findWiiUPath() + "/config.yaml", pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "config.yaml");
+				upload(findWiiUPath() + "/config.yaml", removeLastDir(pathTextbox.Text) + "/config.yaml");
 			}
 
 			if (preferencesSwitch.Checked)
 			{
-				upload(findWiiUPath() + "/preferences.yaml", pathTextbox.Text.Replace(@"wwhd_rando.exe", string.Empty) + "preferences.yaml");
+				upload(findWiiUPath() + "/preferences.yaml", removeLastDir(pathTextbox.Text) + "/preferences.yaml");
 			}
 
 			
@@ -327,16 +377,7 @@ namespace WWHDR_configloader
 		{
 			pathTextbox.Text = Properties.Settings.Default.pathpc;
 			wiiuIpTextbox.Text = Properties.Settings.Default.ipaddress;
-			Console.WriteLine(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern);
-			if (CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern == "M/d/yyyy" || CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern == "MM/dd/yyyy")
-			{
-				dateformat = "MM/dd/yyyy";
-				ampm = "a";
-			}
-			else
-			{
-				dateformat = CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern;
-			}
+			
 		}
 		private void button1_Click_1(object sender, EventArgs e)
 		{
