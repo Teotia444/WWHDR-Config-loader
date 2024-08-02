@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WWHDR Config loader.exe" size="259480">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WWHDR Config loader.exe" size="261016">
       <assemblyIdentity name="WWHDR Config loader" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ljiTG3YjF1goQCHcllFXg9qv69Z9vdJO6eB+tGnela8=</dsig:DigestValue>
+        <dsig:DigestValue>0MF/M+xPu3sjZH2j4B5Dz/ZBXIcDo0gtTlqofan/qak=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

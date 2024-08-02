@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace WWHDR_configloader
 {
@@ -20,6 +21,16 @@ namespace WWHDR_configloader
 	{
 		string dateformat = "dd/MM/yyyy";
 		string ampm = "";
+
+		int ogSizeX = 328;
+		int ogSizeY = 483;
+		int mdSizeX = 890;
+		int mdSizeY = 483;
+
+		bool extMode = true;
+		bool spoilerFromWiiU = false;
+
+
 		public Form1()
 		{
 			InitializeComponent();
@@ -45,7 +56,8 @@ namespace WWHDR_configloader
 
 			FtpWebResponse response = null;
 			try { response = (FtpWebResponse)request.GetResponse(); }
-			catch (WebException e){ MessageBox.Show("Invalid IP address"); return (new string[0], new List<DateTime>()); }
+			catch (WebException e){ //MessageBox.Show("Invalid IP address"); 
+				return (new string[0], new List<DateTime>()); }
 			
 			Stream responseStream = response.GetResponseStream();
 			StreamReader reader = new StreamReader(responseStream);
@@ -168,7 +180,7 @@ namespace WWHDR_configloader
 		{
 			try
 			{
-				if(remoteFile == "ErrNoFolderFound/config.yaml" || remoteFile == "ErrNoFolderFound/preferences.yaml") {
+				if(remoteFile == "ErrNoFolderFound/config.yaml" || remoteFile == "ErrNoFolderFound/preferences.yaml" || remoteFile == "ErrNoFolderFound/plandomizer.yaml") {
 					return;
 				}
 				/* Create an FTP Request */
@@ -204,7 +216,7 @@ namespace WWHDR_configloader
 					var a = ex.Response as FtpWebResponse;
 					if(a.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailableOrBusy)
 					{
-						MessageBox.Show("Error : File(s) does not exists");
+						MessageBox.Show("Error : couldn't find the file at "+remoteFile+" on the console.");
 					}
 					
 				}
@@ -219,12 +231,51 @@ namespace WWHDR_configloader
 				var a = ex.Response as FtpWebResponse;
 				if (a.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailableOrBusy)
 				{
-					MessageBox.Show("Error : File does not exists. This can happen if you never created a preferences.yaml or config.yaml file on your Wii U.");
+					MessageBox.Show("Error : File at \""+ remoteFile+" \"does not exists.");
 				}
 			}
 			return;
 		}
-		public void upload(string remoteFile, string localFile)
+
+
+        public void delete(string remoteFile)
+        {
+            try
+            {
+                if (remoteFile.Contains("ErrNoFolderFound"))
+                {
+                    return;
+                }
+                /* Create an FTP Request */
+                FtpWebRequest ftpRequest = (FtpWebRequest)FtpWebRequest.Create("ftp://" + wiiuIpTextbox.Text + ":21/" + remoteFile);
+                /* Log in to the FTP Server with the User Name and Password Provided */
+                ftpRequest.Credentials = new NetworkCredential("anonymous", "whatever");
+                /* When in doubt, use these options */
+                ftpRequest.UseBinary = true;
+                ftpRequest.UsePassive = true;
+                ftpRequest.KeepAlive = true;
+                /* Specify the Type of FTP Request */
+                ftpRequest.Method = WebRequestMethods.Ftp.DeleteFile;
+                /* Establish Return Communication with the FTP Server */
+                FtpWebResponse ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+                /* Get the FTP Server's Response Stream */
+                Stream ftpStream = ftpResponse.GetResponseStream();
+                ftpStream.Close();
+                ftpResponse.Close();
+                ftpRequest = null;
+            }
+            catch (WebException ex)
+            {
+                var a = ex.Response as FtpWebResponse;
+                if (a.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailableOrBusy)
+                {
+                    MessageBox.Show("Error : File at \"" + remoteFile + " \"does not exists.");
+                }
+            }
+            return;
+        }
+
+        public void upload(string remoteFile, string localFile)
 		{
 			try
 			{
@@ -304,7 +355,12 @@ namespace WWHDR_configloader
 			{
 				download(findWiiUPath() + "/preferences.yaml", removeLastDir(pathTextbox.Text) + "/preferences.yaml");
 			}
-			message.Text = "Successfully recieved the file!";
+            if (plandoSwitch.Checked)
+            {
+                download(findWiiUPath() + "/plandomizer.yaml", removeLastDir(pathTextbox.Text) + "/plandomizer.yaml");
+            }
+
+            message.Text = "Successfully recieved the file!";
 		}
 
 		string removeLastDir(string path)
@@ -346,8 +402,13 @@ namespace WWHDR_configloader
 				MessageBox.Show("The preference file does not exists on your computer. Make sure that you opened and closed the app at least once.");
 				return;
 			}
+            if (!File.Exists(removeLastDir(pathTextbox.Text) + "/plandomizer.yaml") && plandoSwitch.Enabled)
+            {
+                MessageBox.Show("The plandomizer file does not exists on your computer. Make sure that it is called : plandomizer.yaml\r\nIf you don't want to transfer the plandomizer file, untick the checkbox.");
+                return;
+            }
 
-			if (configSwitch.Checked)
+            if (configSwitch.Checked)
 			{
 				upload(findWiiUPath() + "/config.yaml", removeLastDir(pathTextbox.Text) + "/config.yaml");
 			}
@@ -356,9 +417,12 @@ namespace WWHDR_configloader
 			{
 				upload(findWiiUPath() + "/preferences.yaml", removeLastDir(pathTextbox.Text) + "/preferences.yaml");
 			}
+            if (plandoSwitch.Checked)
+            {
+                upload(findWiiUPath() + "/plandomizer.yaml", removeLastDir(pathTextbox.Text) + "/plandomizer.yaml");
+            }
 
-			
-			message.Text = "Successfully sent the file!";
+            message.Text = "Successfully sent the file!";
 		}
 
 		private void wiiuIpTextbox_TextChanged(object sender, EventArgs e)
@@ -377,7 +441,20 @@ namespace WWHDR_configloader
 		{
 			pathTextbox.Text = Properties.Settings.Default.pathpc;
 			wiiuIpTextbox.Text = Properties.Settings.Default.ipaddress;
-			
+			if (Properties.Settings.Default.spoilerLogView)
+			{
+                spoilerLog.Visible = true;
+                this.Width = mdSizeX;
+                this.Height = mdSizeY;
+                extMode = true;
+			}
+			else
+			{
+                spoilerLog.Visible = false;
+                this.Width = ogSizeX;
+                this.Height = ogSizeY;
+                extMode = false;
+            }
 		}
 		private void button1_Click_1(object sender, EventArgs e)
 		{
@@ -386,7 +463,7 @@ namespace WWHDR_configloader
 
 		private void configSwitch_CheckedChanged(object sender, EventArgs e)
 		{
-			if(!preferencesSwitch.Checked && !configSwitch.Checked)
+			if(!preferencesSwitch.Checked && !configSwitch.Checked && !plandoSwitch.Checked)
 			{
 				toPc.Enabled = false;
 				toWiiU.Enabled = false;
@@ -400,7 +477,7 @@ namespace WWHDR_configloader
 
 		private void preferencesSwitch_CheckedChanged(object sender, EventArgs e)
 		{
-			if (!preferencesSwitch.Checked && !configSwitch.Checked)
+			if (!preferencesSwitch.Checked && !configSwitch.Checked && !plandoSwitch.Checked)
 			{
 				toPc.Enabled = false;
 				toWiiU.Enabled = false;
@@ -411,5 +488,176 @@ namespace WWHDR_configloader
 				toWiiU.Enabled = true;
 			}
 		}
-	}
+
+        private void plandoSwitch_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!preferencesSwitch.Checked && !configSwitch.Checked && !plandoSwitch.Checked)
+            {
+                toPc.Enabled = false;
+                toWiiU.Enabled = false;
+            }
+            else
+            {
+                toPc.Enabled = true;
+                toWiiU.Enabled = true;
+            }
+        }
+        private void spoilerLogSwitch_Click(object sender, EventArgs e)
+        {
+			
+			if (extMode)
+			{
+				spoilerLog.Visible = false;
+				this.Width = ogSizeX;
+				this.Height = ogSizeY;
+				extMode = false;
+                Properties.Settings.Default.spoilerLogView = false;
+                Properties.Settings.Default.Save();
+            }
+            else
+            {
+                spoilerLog.Visible = true;
+                this.Width = mdSizeX;
+                this.Height = mdSizeY;
+				extMode = true;
+                Properties.Settings.Default.spoilerLogView = true;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+
+
+        void FetchSpoilerLogsWiiU()
+        {
+            listViewSpoiler.Items.Clear();
+            string wiiupath = findWiiUPath();
+            (var wiiufolderName, var wiiufolderDateTime) = readWiiUFolder(wiiupath + "\\logs\\", 1000);
+
+            List<NameDate> nd = new List<NameDate>();
+            for (int i = 0; i < wiiufolderName.Length; i++)
+            {
+                nd.Add(new NameDate(wiiufolderName[i], wiiufolderDateTime[i]));
+
+            }
+            nd.Sort((x, y) => DateTime.Compare(x.Date, y.Date));
+            
+            for (int i = nd.Count - 1; i > 0; i--)
+            {
+                if (nd[i].Name.Contains("Spoiler Log") && !nd[i].Name.Contains("Non-Spoiler Log"))
+                {
+                    string[] row = { nd[i].Name, nd[i].Date.ToString().Substring(0, nd[i].Date.ToString().Length - 3) };
+                    var listViewItem = new ListViewItem(row);
+                    listViewSpoiler.Items.Add(listViewItem);
+                    
+                }
+            }
+        }
+        void FetchSpoilerLogsPC()
+        {
+            listViewSpoiler.Items.Clear();
+            DirectoryInfo d = new DirectoryInfo(removeLastDir(pathTextbox.Text) + "\\logs");
+            FileInfo[] Files = d.GetFiles("*.txt");
+
+
+            List<NameDate> nd = new List<NameDate>();
+			foreach (FileInfo file in Files)
+			{
+				nd.Add(new NameDate(file.Name, file.CreationTime));
+			}
+			
+
+            nd.Sort((x, y) => DateTime.Compare(x.Date, y.Date));
+            
+            for (int i = nd.Count -1; i >= 0; i--)
+            {
+                if (nd[i].Name.Contains("Spoiler Log") && !nd[i].Name.Contains("Non-Spoiler Log"))
+                {
+                    string[] row = { nd[i].Name, nd[i].Date.ToString().Substring(0, nd[i].Date.ToString().Length - 3) };
+                    var listViewItem = new ListViewItem(row);
+                    listViewSpoiler.Items.Add(listViewItem);
+                    
+                }
+            }
+        }
+
+
+        public class NameDate
+        {
+			public NameDate(string name, DateTime date) { 
+				this.Name = name;
+				this.Date = date;
+			}
+            public string Name { get; set; }
+            public DateTime Date { get; set; }
+        }
+
+        private void listViewSpoiler_SelectedIndexChanged(object sender, EventArgs e)
+        {
+			if(listViewSpoiler.SelectedIndices.Count != 0)
+			{
+				delLog.Enabled = true;
+				openLog.Enabled = true;
+			}
+			else
+			{
+                delLog.Enabled = false;
+                openLog.Enabled = false;
+            }
+        }
+
+        private void wiiULog_Click(object sender, EventArgs e)
+        {
+            FetchSpoilerLogsWiiU();
+			spoilerFromWiiU = true;
+        }
+
+        private void pcLog_Click(object sender, EventArgs e)
+        {
+			FetchSpoilerLogsPC();
+            spoilerFromWiiU = false;
+        }
+
+        private void openLog_Click(object sender, EventArgs e)
+        {
+
+			if (spoilerFromWiiU)
+			{
+				foreach(int index in listViewSpoiler.SelectedIndices)
+				{
+					download(findWiiUPath()+"\\logs\\"+listViewSpoiler.Items[index].Text, System.IO.Path.GetTempPath() + "\\" + listViewSpoiler.Items[index].Text);
+                    System.Diagnostics.Process.Start(System.IO.Path.GetTempPath() + "\\" + listViewSpoiler.Items[index].Text);
+
+                }
+			}
+			if (!spoilerFromWiiU)
+			{
+                foreach (int index in listViewSpoiler.SelectedIndices)
+                {
+                    System.Diagnostics.Process.Start(removeLastDir(pathTextbox.Text) + "\\logs\\"+ listViewSpoiler.Items[index].Text);
+                }
+            }
+
+        }
+
+        private void delLog_Click(object sender, EventArgs e)
+        {
+            if (spoilerFromWiiU)
+            {
+                foreach (int index in listViewSpoiler.SelectedIndices)
+                {
+					Console.WriteLine(index.ToString());
+					delete(findWiiUPath() + "\\logs\\" + listViewSpoiler.Items[index].Text);
+                }
+				FetchSpoilerLogsWiiU();
+            }
+			if (!spoilerFromWiiU)
+			{
+                foreach (int index in listViewSpoiler.SelectedIndices)
+				{
+					File.Delete(removeLastDir(pathTextbox.Text) + "\\logs\\" + listViewSpoiler.Items[index].Text);
+				}
+				FetchSpoilerLogsPC();
+            }
+        }
+    }
 }

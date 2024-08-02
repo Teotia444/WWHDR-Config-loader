@@ -8,3 +8,20 @@ C:\Users\teoti\source\repos\WWHDR Permaloader\bin\Debug\WWHDR Config loader.exe
 C:\Users\teoti\source\repos\WWHDR Permaloader\bin\Debug\WWHDR Config loader.pdb
 C:\Users\teoti\source\repos\WWHDR Permaloader\obj\Debug\WWHDR Config loader.exe
 C:\Users\teoti\source\repos\WWHDR Permaloader\obj\Debug\WWHDR Config loader.pdb
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\bin\Debug\WWHDR Config loader.exe.config
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\bin\Debug\WWHDR Config loader.exe.manifest
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\bin\Debug\WWHDR Config loader.application
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\bin\Debug\WWHDR Config loader.exe
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\bin\Debug\WWHDR Config loader.pdb
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR Permaloader.csproj.AssemblyReference.cache
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR_configloader.Form1.resources
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR_configloader.Properties.Resources.resources
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR Permaloader.csproj.GenerateResource.cache
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR Permaloader.csproj.CoreCompileInputs.cache
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR Permaloader.csproj.Fody.CopyLocal.cache
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR Config loader.exe.manifest
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR Config loader.application
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR Pe.8F3A4B5C.Up2Date
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR Config loader.exe
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Debug\WWHDR Config loader.pdb
