@@ -392,17 +392,17 @@ namespace WWHDR_configloader
 				MessageBox.Show("Please enter a path for the PC app");
 				return;
 			}
-			if(!File.Exists(removeLastDir(pathTextbox.Text) + "/config.yaml") && configSwitch.Enabled)
+			if(!File.Exists(removeLastDir(pathTextbox.Text) + "/config.yaml") && configSwitch.Checked)
 			{
 				MessageBox.Show("The config file does not exists on your computer. Make sure that you opened and closed the app at least once.");
 				return;
 			}
-			if (!File.Exists(removeLastDir(pathTextbox.Text) + "/preferences.yaml") && preferencesSwitch.Enabled)
+			if (!File.Exists(removeLastDir(pathTextbox.Text) + "/preferences.yaml") && preferencesSwitch.Checked)
 			{
 				MessageBox.Show("The preference file does not exists on your computer. Make sure that you opened and closed the app at least once.");
 				return;
 			}
-            if (!File.Exists(removeLastDir(pathTextbox.Text) + "/plandomizer.yaml") && plandoSwitch.Enabled)
+            if (!File.Exists(removeLastDir(pathTextbox.Text) + "/plandomizer.yaml") && plandoSwitch.Checked)
             {
                 MessageBox.Show("The plandomizer file does not exists on your computer. Make sure that it is called : plandomizer.yaml\r\nIf you don't want to transfer the plandomizer file, untick the checkbox.");
                 return;
