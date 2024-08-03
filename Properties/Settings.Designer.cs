@@ -58,5 +58,53 @@ namespace WWHDR_configloader.Properties {
                 this["spoilerLogView"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string plandoPath {
+            get {
+                return ((string)(this["plandoPath"]));
+            }
+            set {
+                this["plandoPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool plando {
+            get {
+                return ((bool)(this["plando"]));
+            }
+            set {
+                this["plando"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool config {
+            get {
+                return ((bool)(this["config"]));
+            }
+            set {
+                this["config"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool pref {
+            get {
+                return ((bool)(this["pref"]));
+            }
+            set {
+                this["pref"] = value;
+            }
+        }
     }
 }

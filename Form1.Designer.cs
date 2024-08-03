@@ -35,7 +35,7 @@
             this.toPc = new System.Windows.Forms.Button();
             this.pathTextbox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
+            this.pcAppBrowse = new System.Windows.Forms.Button();
             this.ipCheck = new System.Windows.Forms.Button();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.message = new System.Windows.Forms.Label();
@@ -44,17 +44,21 @@
             this.spoilerLogSwitch = new System.Windows.Forms.Button();
             this.plandoSwitch = new System.Windows.Forms.CheckBox();
             this.spoilerLog = new System.Windows.Forms.GroupBox();
+            this.openLog = new System.Windows.Forms.Button();
+            this.delLog = new System.Windows.Forms.Button();
             this.listViewSpoiler = new System.Windows.Forms.ListView();
             this.name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.wiiULog = new System.Windows.Forms.Button();
+            this.pcLog = new System.Windows.Forms.Button();
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.wiiULog = new System.Windows.Forms.Button();
-            this.pcLog = new System.Windows.Forms.Button();
-            this.openLog = new System.Windows.Forms.Button();
-            this.delLog = new System.Windows.Forms.Button();
+            this.plandoBrowse = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.plandoPath = new System.Windows.Forms.TextBox();
+            this.plandoDialog = new System.Windows.Forms.OpenFileDialog();
             this.spoilerLog.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,7 +72,7 @@
             // 
             // toWiiU
             // 
-            this.toWiiU.Location = new System.Drawing.Point(56, 288);
+            this.toWiiU.Location = new System.Drawing.Point(56, 300);
             this.toWiiU.Name = "toWiiU";
             this.toWiiU.Size = new System.Drawing.Size(210, 56);
             this.toWiiU.TabIndex = 1;
@@ -87,7 +91,7 @@
             // 
             // toPc
             // 
-            this.toPc.Location = new System.Drawing.Point(56, 228);
+            this.toPc.Location = new System.Drawing.Point(56, 240);
             this.toPc.Name = "toPc";
             this.toPc.Size = new System.Drawing.Size(210, 54);
             this.toPc.TabIndex = 3;
@@ -97,7 +101,7 @@
             // 
             // pathTextbox
             // 
-            this.pathTextbox.Location = new System.Drawing.Point(32, 94);
+            this.pathTextbox.Location = new System.Drawing.Point(31, 88);
             this.pathTextbox.Name = "pathTextbox";
             this.pathTextbox.Size = new System.Drawing.Size(210, 20);
             this.pathTextbox.TabIndex = 4;
@@ -106,21 +110,21 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(29, 78);
+            this.label2.Location = new System.Drawing.Point(28, 72);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(154, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Path to the desktop application";
             // 
-            // button3
+            // pcAppBrowse
             // 
-            this.button3.Location = new System.Drawing.Point(249, 90);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(59, 23);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "Browse";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.pcAppBrowse.Location = new System.Drawing.Point(248, 84);
+            this.pcAppBrowse.Name = "pcAppBrowse";
+            this.pcAppBrowse.Size = new System.Drawing.Size(59, 23);
+            this.pcAppBrowse.TabIndex = 6;
+            this.pcAppBrowse.Text = "Browse";
+            this.pcAppBrowse.UseVisualStyleBackColor = true;
+            this.pcAppBrowse.Click += new System.EventHandler(this.button3_Click);
             // 
             // ipCheck
             // 
@@ -141,7 +145,7 @@
             // 
             this.message.AutoSize = true;
             this.message.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.message.Location = new System.Drawing.Point(29, 143);
+            this.message.Location = new System.Drawing.Point(53, 155);
             this.message.Name = "message";
             this.message.Size = new System.Drawing.Size(0, 13);
             this.message.TabIndex = 8;
@@ -151,7 +155,7 @@
             this.configSwitch.AutoSize = true;
             this.configSwitch.Checked = true;
             this.configSwitch.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.configSwitch.Location = new System.Drawing.Point(56, 182);
+            this.configSwitch.Location = new System.Drawing.Point(56, 194);
             this.configSwitch.Name = "configSwitch";
             this.configSwitch.Size = new System.Drawing.Size(176, 17);
             this.configSwitch.TabIndex = 9;
@@ -164,7 +168,7 @@
             this.preferencesSwitch.AutoSize = true;
             this.preferencesSwitch.Checked = true;
             this.preferencesSwitch.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.preferencesSwitch.Location = new System.Drawing.Point(56, 205);
+            this.preferencesSwitch.Location = new System.Drawing.Point(56, 217);
             this.preferencesSwitch.Name = "preferencesSwitch";
             this.preferencesSwitch.Size = new System.Drawing.Size(214, 17);
             this.preferencesSwitch.TabIndex = 10;
@@ -174,7 +178,7 @@
             // 
             // spoilerLogSwitch
             // 
-            this.spoilerLogSwitch.Location = new System.Drawing.Point(56, 350);
+            this.spoilerLogSwitch.Location = new System.Drawing.Point(56, 362);
             this.spoilerLogSwitch.Name = "spoilerLogSwitch";
             this.spoilerLogSwitch.Size = new System.Drawing.Size(210, 56);
             this.spoilerLogSwitch.TabIndex = 11;
@@ -187,7 +191,7 @@
             this.plandoSwitch.AutoSize = true;
             this.plandoSwitch.Checked = true;
             this.plandoSwitch.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.plandoSwitch.Location = new System.Drawing.Point(56, 159);
+            this.plandoSwitch.Location = new System.Drawing.Point(56, 171);
             this.plandoSwitch.Name = "plandoSwitch";
             this.plandoSwitch.Size = new System.Drawing.Size(230, 17);
             this.plandoSwitch.TabIndex = 12;
@@ -208,6 +212,28 @@
             this.spoilerLog.TabIndex = 13;
             this.spoilerLog.TabStop = false;
             this.spoilerLog.Text = "Spoiler Logs";
+            // 
+            // openLog
+            // 
+            this.openLog.Enabled = false;
+            this.openLog.Location = new System.Drawing.Point(401, 349);
+            this.openLog.Name = "openLog";
+            this.openLog.Size = new System.Drawing.Size(110, 56);
+            this.openLog.TabIndex = 16;
+            this.openLog.Text = "Open";
+            this.openLog.UseVisualStyleBackColor = true;
+            this.openLog.Click += new System.EventHandler(this.openLog_Click);
+            // 
+            // delLog
+            // 
+            this.delLog.Enabled = false;
+            this.delLog.Location = new System.Drawing.Point(285, 349);
+            this.delLog.Name = "delLog";
+            this.delLog.Size = new System.Drawing.Size(110, 56);
+            this.delLog.TabIndex = 17;
+            this.delLog.Text = "Delete";
+            this.delLog.UseVisualStyleBackColor = true;
+            this.delLog.Click += new System.EventHandler(this.delLog_Click);
             // 
             // listViewSpoiler
             // 
@@ -254,33 +280,46 @@
             this.pcLog.UseVisualStyleBackColor = true;
             this.pcLog.Click += new System.EventHandler(this.pcLog_Click);
             // 
-            // openLog
+            // plandoBrowse
             // 
-            this.openLog.Enabled = false;
-            this.openLog.Location = new System.Drawing.Point(401, 349);
-            this.openLog.Name = "openLog";
-            this.openLog.Size = new System.Drawing.Size(110, 56);
-            this.openLog.TabIndex = 16;
-            this.openLog.Text = "Open";
-            this.openLog.UseVisualStyleBackColor = true;
-            this.openLog.Click += new System.EventHandler(this.openLog_Click);
+            this.plandoBrowse.Location = new System.Drawing.Point(248, 125);
+            this.plandoBrowse.Name = "plandoBrowse";
+            this.plandoBrowse.Size = new System.Drawing.Size(59, 23);
+            this.plandoBrowse.TabIndex = 16;
+            this.plandoBrowse.Text = "Browse";
+            this.plandoBrowse.UseVisualStyleBackColor = true;
+            this.plandoBrowse.Click += new System.EventHandler(this.plandoBrowse_Click);
             // 
-            // delLog
+            // label3
             // 
-            this.delLog.Enabled = false;
-            this.delLog.Location = new System.Drawing.Point(285, 349);
-            this.delLog.Name = "delLog";
-            this.delLog.Size = new System.Drawing.Size(110, 56);
-            this.delLog.TabIndex = 17;
-            this.delLog.Text = "Delete";
-            this.delLog.UseVisualStyleBackColor = true;
-            this.delLog.Click += new System.EventHandler(this.delLog_Click);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(28, 113);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(219, 13);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Path to the plandomizer file on your computer";
+            // 
+            // plandoPath
+            // 
+            this.plandoPath.Location = new System.Drawing.Point(31, 129);
+            this.plandoPath.Name = "plandoPath";
+            this.plandoPath.Size = new System.Drawing.Size(210, 20);
+            this.plandoPath.TabIndex = 14;
+            this.plandoPath.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // plandoDialog
+            // 
+            this.plandoDialog.Filter = "Plandomizer file (*.yaml)|*.yaml";
+            this.plandoDialog.RestoreDirectory = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(874, 444);
+            this.ClientSize = new System.Drawing.Size(874, 502);
+            this.Controls.Add(this.plandoBrowse);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.plandoPath);
             this.Controls.Add(this.spoilerLog);
             this.Controls.Add(this.plandoSwitch);
             this.Controls.Add(this.spoilerLogSwitch);
@@ -288,7 +327,7 @@
             this.Controls.Add(this.configSwitch);
             this.Controls.Add(this.message);
             this.Controls.Add(this.ipCheck);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.pcAppBrowse);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.pathTextbox);
             this.Controls.Add(this.toPc);
@@ -315,7 +354,7 @@
 		private System.Windows.Forms.Button toPc;
 		private System.Windows.Forms.TextBox pathTextbox;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Button pcAppBrowse;
 		private System.Windows.Forms.Button ipCheck;
 		private System.Windows.Forms.OpenFileDialog fileDialog;
 		private System.Windows.Forms.Label message;
@@ -335,6 +374,10 @@
         private System.Windows.Forms.Button delLog;
         private System.Windows.Forms.Button wiiULog;
         private System.Windows.Forms.Button pcLog;
+        private System.Windows.Forms.Button plandoBrowse;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox plandoPath;
+        private System.Windows.Forms.OpenFileDialog plandoDialog;
     }
 }
 

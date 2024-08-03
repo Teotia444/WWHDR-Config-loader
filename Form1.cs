@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WWHDR_configloader.Properties;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace WWHDR_configloader
@@ -19,8 +20,8 @@ namespace WWHDR_configloader
 
 	public partial class Form1 : Form
 	{
-		string dateformat = "dd/MM/yyyy";
-		string ampm = "";
+		//string dateformat = "dd/MM/yyyy";
+		//string ampm = "";
 
 		int ogSizeX = 328;
 		int ogSizeY = 483;
@@ -42,6 +43,12 @@ namespace WWHDR_configloader
 			{
 				pathTextbox.Text = fileDialog.FileName;
 			}
+				
+			if(plandoPath.Text == "")
+			{
+				plandoPath.Text = removeLastDir(pathTextbox.Text) + "\\plandomizer.yaml";
+			}
+
 		}
 
 
@@ -55,8 +62,9 @@ namespace WWHDR_configloader
 			request.Credentials = new NetworkCredential("anonymous", "whatever");
 
 			FtpWebResponse response = null;
-			try { response = (FtpWebResponse)request.GetResponse(); }
-			catch (WebException e){ //MessageBox.Show("Invalid IP address"); 
+            try { response = (FtpWebResponse)request.GetResponse(); }
+			catch (WebException)
+            { //MessageBox.Show("Invalid IP address"); 
 				return (new string[0], new List<DateTime>()); }
 			
 			Stream responseStream = response.GetResponseStream();
@@ -355,10 +363,21 @@ namespace WWHDR_configloader
 			{
 				download(findWiiUPath() + "/preferences.yaml", removeLastDir(pathTextbox.Text) + "/preferences.yaml");
 			}
-            if (plandoSwitch.Checked)
-            {
-                download(findWiiUPath() + "/plandomizer.yaml", removeLastDir(pathTextbox.Text) + "/plandomizer.yaml");
+			if(plandoPath.Text != "")
+			{
+                if (plandoSwitch.Checked)
+                {
+                    download(findWiiUPath() + "/plandomizer.yaml", plandoPath.Text);
+                }
+			}
+			else
+			{
+                if (plandoSwitch.Checked)
+                {
+                    download(findWiiUPath() + "/plandomizer.yaml", removeLastDir(pathTextbox.Text) + "/plandomizer.yaml");
+                }
             }
+            
 
             message.Text = "Successfully recieved the file!";
 		}
@@ -402,9 +421,9 @@ namespace WWHDR_configloader
 				MessageBox.Show("The preference file does not exists on your computer. Make sure that you opened and closed the app at least once.");
 				return;
 			}
-            if (!File.Exists(removeLastDir(pathTextbox.Text) + "/plandomizer.yaml") && plandoSwitch.Checked)
+            if (!File.Exists(plandoPath.Text) && plandoSwitch.Checked)
             {
-                MessageBox.Show("The plandomizer file does not exists on your computer. Make sure that it is called : plandomizer.yaml\r\nIf you don't want to transfer the plandomizer file, untick the checkbox.");
+                MessageBox.Show("The plandomizer file does not exists on your computer. Make sure you have selected a valid file.\r\nIf you don't want to transfer the plandomizer file, untick the checkbox.");
                 return;
             }
 
@@ -419,7 +438,7 @@ namespace WWHDR_configloader
 			}
             if (plandoSwitch.Checked)
             {
-                upload(findWiiUPath() + "/plandomizer.yaml", removeLastDir(pathTextbox.Text) + "/plandomizer.yaml");
+                upload(findWiiUPath() + "/plandomizer.yaml", plandoPath.Text);
             }
 
             message.Text = "Successfully sent the file!";
@@ -441,6 +460,12 @@ namespace WWHDR_configloader
 		{
 			pathTextbox.Text = Properties.Settings.Default.pathpc;
 			wiiuIpTextbox.Text = Properties.Settings.Default.ipaddress;
+            plandoPath.Text = Properties.Settings.Default.plandoPath;
+            plandoSwitch.Checked = Properties.Settings.Default.plando;
+			configSwitch.Checked = Properties.Settings.Default.config;
+			preferencesSwitch.Checked = Properties.Settings.Default.pref;
+			
+
 			if (Properties.Settings.Default.spoilerLogView)
 			{
                 spoilerLog.Visible = true;
@@ -455,7 +480,23 @@ namespace WWHDR_configloader
                 this.Height = ogSizeY;
                 extMode = false;
             }
-		}
+
+            if (plandoPath.Text == "" && pathTextbox.Text != "")
+            {
+                plandoPath.Text = removeLastDir(pathTextbox.Text) + "\\plandomizer.yaml";
+            }
+            if (!plandoSwitch.Checked)
+            {
+                plandoPath.Enabled = false;
+                plandoBrowse.Enabled = false;
+            }
+            else
+            {
+                plandoPath.Enabled = true;
+                plandoBrowse.Enabled = true;
+            }
+
+        }
 		private void button1_Click_1(object sender, EventArgs e)
 		{
 			MessageBox.Show(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern);
@@ -473,7 +514,9 @@ namespace WWHDR_configloader
 				toPc.Enabled = true;
 				toWiiU.Enabled = true;
 			}
-		}
+            Properties.Settings.Default.config = configSwitch.Checked;
+            Properties.Settings.Default.Save();
+        }
 
 		private void preferencesSwitch_CheckedChanged(object sender, EventArgs e)
 		{
@@ -487,7 +530,9 @@ namespace WWHDR_configloader
 				toPc.Enabled = true;
 				toWiiU.Enabled = true;
 			}
-		}
+            Properties.Settings.Default.pref = preferencesSwitch.Checked;
+            Properties.Settings.Default.Save();
+        }
 
         private void plandoSwitch_CheckedChanged(object sender, EventArgs e)
         {
@@ -501,6 +546,20 @@ namespace WWHDR_configloader
                 toPc.Enabled = true;
                 toWiiU.Enabled = true;
             }
+
+			if (!plandoSwitch.Checked)
+			{
+				plandoPath.Enabled = false;
+				plandoBrowse.Enabled = false;
+			}
+			else
+			{
+                plandoPath.Enabled = true;
+                plandoBrowse.Enabled = true;
+            }
+
+			Properties.Settings.Default.plando = plandoSwitch.Checked;
+			Properties.Settings.Default.Save();
         }
         private void spoilerLogSwitch_Click(object sender, EventArgs e)
         {
@@ -658,6 +717,23 @@ namespace WWHDR_configloader
 				}
 				FetchSpoilerLogsPC();
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+			Properties.Settings.Default.plandoPath = plandoPath.Text;
+			Properties.Settings.Default.Save();
+        }
+
+        private void plandoBrowse_Click(object sender, EventArgs e)
+        {
+            if (plandoDialog.ShowDialog() == DialogResult.OK)
+            {
+                plandoPath.Text = plandoDialog.FileName;
+                Properties.Settings.Default.plandoPath = plandoPath.Text;
+                Properties.Settings.Default.Save();
+            }
+
         }
     }
 }

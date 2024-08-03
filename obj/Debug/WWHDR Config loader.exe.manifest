@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WWHDR Config loader.exe" size="261016">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WWHDR Config loader.exe" size="263064">
       <assemblyIdentity name="WWHDR Config loader" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>0MF/M+xPu3sjZH2j4B5Dz/ZBXIcDo0gtTlqofan/qak=</dsig:DigestValue>
+        <dsig:DigestValue>IpKwESmE9P3LkPvWVT00dDyzMZh805iYPqoC7VVYUP0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -63,13 +63,13 @@
       <dsig:DigestValue>IC6M00+Z5k2dsM8VB0rt8JHVqmJyht13u23mE2JLtfw=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="WWHDR Config loader.exe.config" size="1757">
+  <file name="WWHDR Config loader.exe.config" size="2226">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>eLpU2ZSHBQViJ3yMoqXLpU8ezFxw2EPvD50Fj4HJchk=</dsig:DigestValue>
+      <dsig:DigestValue>RVhWDpS3mZT4UUmm4nautm5LGbktCr2QbGm/E1RlooE=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>
