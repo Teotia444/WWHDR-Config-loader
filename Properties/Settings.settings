@@ -8,7 +8,7 @@
     <Setting Name="pathpc" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="spoilerLogView" Type="System.Boolean" Scope="User">
+    <Setting Name="advancedView" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="plandoPath" Type="System.String" Scope="User">
@@ -21,6 +21,21 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="pref" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="customFiles" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="disclaimer" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="tab" Type="System.String" Scope="User">
+      <Value Profile="(Default)">spoiler</Value>
+    </Setting>
+    <Setting Name="gameinstall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">usb</Value>
+    </Setting>
+    <Setting Name="update" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>

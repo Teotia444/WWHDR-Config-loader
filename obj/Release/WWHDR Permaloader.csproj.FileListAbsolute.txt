@@ -32,3 +32,6 @@ C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Release\WWHDR Config loa
 C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Release\WWHDR Pe.8F3A4B5C.Up2Date
 C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Release\WWHDR Config loader.exe
 C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Release\WWHDR Config loader.pdb
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\bin\Release\Octokit.xml
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Release\WWHDR_configloader.FileSelecter.resources
+C:\Users\teoti\Documents\GitHub\WWHDR-Config-loader\obj\Release\WWHDR_configloader.Settings.resources

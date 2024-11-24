@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Octokit;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,21 +21,27 @@ namespace WWHDR_configloader
 
 	public partial class Form1 : Form
 	{
-		//string dateformat = "dd/MM/yyyy";
-		//string ampm = "";
+        //string dateformat = "dd/MM/yyyy";
+        //string ampm = "";
+
+        string version = "0.6.0";
+
 
 		int ogSizeX = 328;
-		int ogSizeY = 483;
+		int ogSizeY = 487;
 		int mdSizeX = 890;
-		int mdSizeY = 483;
+		int mdSizeY = 487;
 
 		bool extMode = true;
 		bool spoilerFromWiiU = false;
+		bool ready = false;
 
+		ReadFolder rf;
 
 		public Form1()
 		{
 			InitializeComponent();
+			rf = new ReadFolder();
 		}
 
 		private void button3_Click(object sender, EventArgs e)
@@ -43,120 +50,18 @@ namespace WWHDR_configloader
 			{
 				pathTextbox.Text = fileDialog.FileName;
 			}
-				
-			if(plandoPath.Text == "")
+
+			if (plandoPath.Text == "")
 			{
 				plandoPath.Text = removeLastDir(pathTextbox.Text) + "\\plandomizer.yaml";
 			}
 
 		}
 
-
-		private (string[], List<DateTime>) readWiiUFolder(string path, int timeout)
-		{
-			// Get the object used to communicate with the server.
-			FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://"+ wiiuIpTextbox.Text + ":21/" + path);
-			request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-			request.Timeout = timeout;
-			// This example assumes the FTP site uses anonymous logon.
-			request.Credentials = new NetworkCredential("anonymous", "whatever");
-
-			FtpWebResponse response = null;
-            try { response = (FtpWebResponse)request.GetResponse(); }
-			catch (WebException)
-            { //MessageBox.Show("Invalid IP address"); 
-				return (new string[0], new List<DateTime>()); }
-			
-			Stream responseStream = response.GetResponseStream();
-			StreamReader reader = new StreamReader(responseStream);
-			string pattern =
-	@"^([\w-]+)\s+(\d+)\s+(\w+)\s+(\w+)\s+(\d+)\s+" +
-	@"(\w+\s+\d+\s+\d+|\w+\s+\d+\s+\d+:\d+)\s+(.+)$";
-			Regex regex = new Regex(pattern);
-			IFormatProvider culture = CultureInfo.GetCultureInfo("en-us");
-			string[] hourMinFormats =
-				new[] { "MMM dd HH:mm", "MMM dd H:mm", "MMM d HH:mm", "MMM d H:mm" };
-			string[] yearFormats =
-				new[] { "MMM dd yyyy", "MMM d yyyy" };
-
-			List<string> infos = new List<string>();
-			List<DateTime> dates = new List<DateTime>();
-			while (!reader.EndOfStream)
-			{
-				string line = reader.ReadLine();
-				Match match = regex.Match(line);
-				string permissions = match.Groups[1].Value;
-				int inode = int.Parse(match.Groups[2].Value, culture);
-				string owner = match.Groups[3].Value;
-				string group = match.Groups[4].Value;
-				long size = long.Parse(match.Groups[5].Value, culture);
-				string s = Regex.Replace(match.Groups[6].Value, @"\s+", " ");
-
-
-
-				string[] formats = new string[0];
-				formats = (s.IndexOf(':') >= 0) ? hourMinFormats : yearFormats;
-				if (formats == null)
-				{
-					formats[0] = "MMM dd yyyy";
-					formats[1] = "MMM dd HH:mm";
-				}
-				try
-				{
-					dates.Add(DateTime.ParseExact(s, formats, culture, DateTimeStyles.None));
-				}
-				catch (Exception ex)
-				{
-					dates.Add(new DateTime(2024, 6, 16));
-					Console.WriteLine(ex.ToString());
-				}
-				string name = match.Groups[7].Value;
-				infos.Add(name);
-				
-			}
-			return (infos.ToArray(), dates);
-
-		}
-		private string readWiiUFolderString(string path, int timeout)
-		{
-			// Get the object used to communicate with the server.
-			FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + wiiuIpTextbox.Text + ":21/" + path);
-			request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-			request.Timeout = timeout;
-			// This example assumes the FTP site uses anonymous logon.
-			request.Credentials = new NetworkCredential("anonymous", "whatever");
-
-			FtpWebResponse response = null;
-			try
-			{
-				response = (FtpWebResponse)request.GetResponse();
-				Stream responseStream = response.GetResponseStream();
-				StreamReader reader = new StreamReader(responseStream);
-				var items = reader.ReadToEnd();
-				reader.Close();
-				response.Close();
-				return items;
-
-			}
-			catch (System.Net.WebException e)
-			{
-
-				response = (FtpWebResponse)e.Response;
-				if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
-				{
-					return "FileNull";
-				}
-				else
-				{
-					return "ServerUnk";
-				}
-			}
-		}
-
 		private string findWiiUPath()
 		{
 			List<string[]> eachFolder = new List<string[]>();
-			(var wiiufolderName, var wiiufolderDateTime) = readWiiUFolder("fs/vol/external01/wiiu/apps/save/", 1000);
+			(var wiiufolderName, var wiiufolderDateTime) = rf.readWiiUFolder("fs/vol/external01/wiiu/apps/save/", 1000);
 			if (wiiufolderName != null)
 			{ 
 				string pathRecent = "";
@@ -184,157 +89,20 @@ namespace WWHDR_configloader
 
 
 		}
-		public void download(string remoteFile, string localFile)
-		{
-			try
-			{
-				if(remoteFile == "ErrNoFolderFound/config.yaml" || remoteFile == "ErrNoFolderFound/preferences.yaml" || remoteFile == "ErrNoFolderFound/plandomizer.yaml") {
-					return;
-				}
-				/* Create an FTP Request */
-				FtpWebRequest ftpRequest = (FtpWebRequest)FtpWebRequest.Create("ftp://" + wiiuIpTextbox.Text + ":21/" + remoteFile);
-				/* Log in to the FTP Server with the User Name and Password Provided */
-				ftpRequest.Credentials = new NetworkCredential("anonymous", "whatever");
-				/* When in doubt, use these options */
-				ftpRequest.UseBinary = true;
-				ftpRequest.UsePassive = true;
-				ftpRequest.KeepAlive = true;
-				/* Specify the Type of FTP Request */
-				ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
-				/* Establish Return Communication with the FTP Server */
-				FtpWebResponse ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
-				/* Get the FTP Server's Response Stream */
-				Stream ftpStream = ftpResponse.GetResponseStream();
-				/* Open a File Stream to Write the Downloaded File */
-				FileStream localFileStream = new FileStream(localFile, FileMode.Create);
-				/* Buffer for the Downloaded Data */
-				byte[] byteBuffer = new byte[2048];
-				int bytesRead = ftpStream.Read(byteBuffer, 0, 2048);
-				/* Download the File by Writing the Buffered Data Until the Transfer is Complete */
-				try
-				{
-					while (bytesRead > 0)
-					{
-						localFileStream.Write(byteBuffer, 0, bytesRead);
-						bytesRead = ftpStream.Read(byteBuffer, 0, 2048);
-					}
-				}
-				catch (WebException ex)
-				{
-					var a = ex.Response as FtpWebResponse;
-					if(a.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailableOrBusy)
-					{
-						MessageBox.Show("Error : couldn't find the file at "+remoteFile+" on the console.");
-					}
-					
-				}
-
-				/* Resource Cleanup */
-				localFileStream.Close();
-				ftpStream.Close();
-				ftpResponse.Close();
-				ftpRequest = null;
-			}
-			catch (WebException ex) {
-				var a = ex.Response as FtpWebResponse;
-				if (a.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailableOrBusy)
-				{
-					MessageBox.Show("Error : File at \""+ remoteFile+" \"does not exists.");
-				}
-			}
-			return;
-		}
-
-
-        public void delete(string remoteFile)
-        {
-            try
-            {
-                if (remoteFile.Contains("ErrNoFolderFound"))
-                {
-                    return;
-                }
-                /* Create an FTP Request */
-                FtpWebRequest ftpRequest = (FtpWebRequest)FtpWebRequest.Create("ftp://" + wiiuIpTextbox.Text + ":21/" + remoteFile);
-                /* Log in to the FTP Server with the User Name and Password Provided */
-                ftpRequest.Credentials = new NetworkCredential("anonymous", "whatever");
-                /* When in doubt, use these options */
-                ftpRequest.UseBinary = true;
-                ftpRequest.UsePassive = true;
-                ftpRequest.KeepAlive = true;
-                /* Specify the Type of FTP Request */
-                ftpRequest.Method = WebRequestMethods.Ftp.DeleteFile;
-                /* Establish Return Communication with the FTP Server */
-                FtpWebResponse ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
-                /* Get the FTP Server's Response Stream */
-                Stream ftpStream = ftpResponse.GetResponseStream();
-                ftpStream.Close();
-                ftpResponse.Close();
-                ftpRequest = null;
-            }
-            catch (WebException ex)
-            {
-                var a = ex.Response as FtpWebResponse;
-                if (a.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailableOrBusy)
-                {
-                    MessageBox.Show("Error : File at \"" + remoteFile + " \"does not exists.");
-                }
-            }
-            return;
-        }
-
-        public void upload(string remoteFile, string localFile)
-		{
-			try
-			{
-				/* Create an FTP Request */
-				FtpWebRequest ftpRequest = (FtpWebRequest)FtpWebRequest.Create("ftp://" + wiiuIpTextbox.Text + ":21/"+ remoteFile);
-				/* Log in to the FTP Server with the User Name and Password Provided */
-				ftpRequest.Credentials = new NetworkCredential("anonymous", "whatever");
-				/* When in doubt, use these options */
-				ftpRequest.UseBinary = true;
-				ftpRequest.UsePassive = true;
-				ftpRequest.KeepAlive = true;
-				/* Specify the Type of FTP Request */
-				ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
-				/* Establish Return Communication with the FTP Server */
-				Stream ftpStream = ftpRequest.GetRequestStream();
-				/* Open a File Stream to Read the File for Upload */
-				FileStream localFileStream = new FileStream(localFile, FileMode.Open);
-				/* Buffer for the Downloaded Data */
-				byte[] byteBuffer = new byte[2048];
-				int bytesSent = localFileStream.Read(byteBuffer, 0, 2048);
-				/* Upload the File by Sending the Buffered Data Until the Transfer is Complete */
-				try
-				{
-					while (bytesSent != 0)
-					{
-						ftpStream.Write(byteBuffer, 0, bytesSent);
-						bytesSent = localFileStream.Read(byteBuffer, 0, 2048);
-					}
-				}
-				catch (Exception ex) { Console.WriteLine(ex.ToString()); }
-				/* Resource Cleanup */
-				localFileStream.Close();
-				ftpStream.Close();
-				ftpRequest = null;
-			}
-			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
-			return;
-		}
+		
 
 
 
 		private void button4_Click(object sender, EventArgs e)
 		{
-			var response = readWiiUFolderString("fs/vol/external01/wiiu/apps/save", 1000);
+			var response = rf.readWiiUFolderString("fs/vol/external01/wiiu/apps/save", 1000);
 			if (response == "FileNull")
 			{
-				MessageBox.Show("The program was able to connect to the server, but no files were detected. Make sure to launch the Rando app at least once to generate a config file.");
+				MessageBox.Show("The program was able to connect to the server, but no files were detected. Make sure to launch the Rando app at least once to generate a config file.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 			else if (response == "ServerUnk")
 			{
-				MessageBox.Show("The program was unable to connect to the server. Make sure you entered the correct address (I.e. 192.168.XXX.XXX) without including the port (numbers after the colon)");
+				MessageBox.Show("The program was unable to connect to the server. Make sure you entered the correct address (I.e. 192.168.XXX.XXX) without including the port (numbers after the colon)", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 			else
 			{
@@ -346,35 +114,35 @@ namespace WWHDR_configloader
 		{
 			if(wiiuIpTextbox.Text == "")
 			{
-				MessageBox.Show("Please enter a valid IP address");
+				MessageBox.Show("Please enter a valid IP address", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			if (pathTextbox.Text == "")
 			{
-				MessageBox.Show("Please enter a path for the PC app");
+                MessageBox.Show("Please enter a path for the PC app", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 
 			if (configSwitch.Checked)
 			{
-				download(findWiiUPath() + "/config.yaml", removeLastDir(pathTextbox.Text) + "/config.yaml");
+				rf.download(findWiiUPath() + "/config.yaml", removeLastDir(pathTextbox.Text) + "/config.yaml");
 			}
 			if (preferencesSwitch.Checked)
 			{
-				download(findWiiUPath() + "/preferences.yaml", removeLastDir(pathTextbox.Text) + "/preferences.yaml");
+                rf.download(findWiiUPath() + "/preferences.yaml", removeLastDir(pathTextbox.Text) + "/preferences.yaml");
 			}
 			if(plandoPath.Text != "")
 			{
                 if (plandoSwitch.Checked)
                 {
-                    download(findWiiUPath() + "/plandomizer.yaml", plandoPath.Text);
+                    rf.download(findWiiUPath() + "/plandomizer.yaml", plandoPath.Text);
                 }
 			}
 			else
 			{
                 if (plandoSwitch.Checked)
                 {
-                    download(findWiiUPath() + "/plandomizer.yaml", removeLastDir(pathTextbox.Text) + "/plandomizer.yaml");
+                    rf.download(findWiiUPath() + "/plandomizer.yaml", removeLastDir(pathTextbox.Text) + "/plandomizer.yaml");
                 }
             }
             
@@ -403,42 +171,42 @@ namespace WWHDR_configloader
 		{
 			if (wiiuIpTextbox.Text == "")
 			{
-				MessageBox.Show("Please enter a valid IP address");
+				MessageBox.Show("Please enter a valid IP address", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			if (pathTextbox.Text == "")
 			{
-				MessageBox.Show("Please enter a path for the PC app");
+				MessageBox.Show("Please enter a path for the PC app", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			if(!File.Exists(removeLastDir(pathTextbox.Text) + "/config.yaml") && configSwitch.Checked)
 			{
-				MessageBox.Show("The config file does not exists on your computer. Make sure that you opened and closed the app at least once.");
+				MessageBox.Show("The config file does not exists on your computer. Make sure that you opened and closed the app at least once.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			if (!File.Exists(removeLastDir(pathTextbox.Text) + "/preferences.yaml") && preferencesSwitch.Checked)
 			{
-				MessageBox.Show("The preference file does not exists on your computer. Make sure that you opened and closed the app at least once.");
+				MessageBox.Show("The preference file does not exists on your computer. Make sure that you opened and closed the app at least once.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
             if (!File.Exists(plandoPath.Text) && plandoSwitch.Checked)
             {
-                MessageBox.Show("The plandomizer file does not exists on your computer. Make sure you have selected a valid file.\r\nIf you don't want to transfer the plandomizer file, untick the checkbox.");
+                MessageBox.Show("The plandomizer file does not exists on your computer. Make sure you have selected a valid file.\r\nIf you don't want to transfer the plandomizer file, untick the checkbox.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (configSwitch.Checked)
 			{
-				upload(findWiiUPath() + "/config.yaml", removeLastDir(pathTextbox.Text) + "/config.yaml");
+				rf.upload(findWiiUPath() + "/config.yaml", removeLastDir(pathTextbox.Text) + "/config.yaml");
 			}
 
 			if (preferencesSwitch.Checked)
 			{
-				upload(findWiiUPath() + "/preferences.yaml", removeLastDir(pathTextbox.Text) + "/preferences.yaml");
+				rf.upload(findWiiUPath() + "/preferences.yaml", removeLastDir(pathTextbox.Text) + "/preferences.yaml");
 			}
             if (plandoSwitch.Checked)
             {
-                upload(findWiiUPath() + "/plandomizer.yaml", plandoPath.Text);
+                rf.upload(findWiiUPath() + "/plandomizer.yaml", plandoPath.Text);
             }
 
             message.Text = "Successfully sent the file!";
@@ -458,24 +226,49 @@ namespace WWHDR_configloader
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
+
+
 			pathTextbox.Text = Properties.Settings.Default.pathpc;
 			wiiuIpTextbox.Text = Properties.Settings.Default.ipaddress;
             plandoPath.Text = Properties.Settings.Default.plandoPath;
             plandoSwitch.Checked = Properties.Settings.Default.plando;
 			configSwitch.Checked = Properties.Settings.Default.config;
 			preferencesSwitch.Checked = Properties.Settings.Default.pref;
-			
+            fileRepView.Enabled = Properties.Settings.Default.disclaimer;
+			if(Properties.Settings.Default.gameinstall == "nand")
+			{
+                gameInstall.SelectedIndex = 0;
+			}
+			else if(Properties.Settings.Default.gameinstall == "usb")
+			{
+                gameInstall.SelectedIndex = 1;
+            }
 
-			if (Properties.Settings.Default.spoilerLogView)
+            removePatch.Enabled = false;
+			patchOne.Enabled = false;
+
+
+            if (Properties.Settings.Default.tab == "spoiler")
 			{
                 spoilerLog.Visible = true;
+                fileRepView.Visible = false;
+            }
+			else if(Properties.Settings.Default.tab == "patch")
+			{
+                spoilerLog.Visible = false;
+                fileRepView.Visible = true;
+            }
+
+			FileRViewLoad();
+
+			if (Properties.Settings.Default.advancedView)
+			{
                 this.Width = mdSizeX;
                 this.Height = mdSizeY;
                 extMode = true;
 			}
 			else
 			{
-                spoilerLog.Visible = false;
                 this.Width = ogSizeX;
                 this.Height = ogSizeY;
                 extMode = false;
@@ -495,9 +288,39 @@ namespace WWHDR_configloader
                 plandoPath.Enabled = true;
                 plandoBrowse.Enabled = true;
             }
+            if (Properties.Settings.Default.update)
+            {
+                _ = CheckGitHubNewerVersion();
+                
+            }
+
+            ready = true;
 
         }
-		private void button1_Click_1(object sender, EventArgs e)
+
+        public async Task<bool> CheckGitHubNewerVersion()
+        {
+
+            GitHubClient client = new GitHubClient(new ProductHeaderValue("wwhdr-config-loader"));
+            IReadOnlyList<Release> releases = await client.Repository.Release.GetAll("Teotia444", "WWHDR-Config-loader");
+
+            Version latestGitHubVersion = new Version(releases[0].TagName);
+            Version localVersion = new Version(version); 
+
+            int versionComparison = localVersion.CompareTo(latestGitHubVersion);
+            if (versionComparison < 0)
+            {
+                DialogResult r = MessageBox.Show("There is an update available on Github! \r\nOpen the Github release tab?", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (r == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start("https://github.com/Teotia444/WWHDR-Config-loader/releases/latest");
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
 		{
 			MessageBox.Show(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern);
 		}
@@ -561,25 +384,26 @@ namespace WWHDR_configloader
 			Properties.Settings.Default.plando = plandoSwitch.Checked;
 			Properties.Settings.Default.Save();
         }
-        private void spoilerLogSwitch_Click(object sender, EventArgs e)
+        private void advancedSwitch_Click(object sender, EventArgs e)
         {
-			
-			if (extMode)
-			{
-				spoilerLog.Visible = false;
-				this.Width = ogSizeX;
-				this.Height = ogSizeY;
-				extMode = false;
-                Properties.Settings.Default.spoilerLogView = false;
+            if (extMode)
+            {
+                this.Width = ogSizeX;
+                this.Height = ogSizeY;
+                extMode = false;
+                Properties.Settings.Default.advancedView = false;
                 Properties.Settings.Default.Save();
             }
             else
             {
-                spoilerLog.Visible = true;
                 this.Width = mdSizeX;
                 this.Height = mdSizeY;
-				extMode = true;
-                Properties.Settings.Default.spoilerLogView = true;
+                extMode = true;
+				if (!spoilerLog.Visible)
+				{
+					spoilerLog.Visible = true;
+				}
+                Properties.Settings.Default.advancedView = true;
                 Properties.Settings.Default.Save();
             }
         }
@@ -590,8 +414,11 @@ namespace WWHDR_configloader
         {
             listViewSpoiler.Items.Clear();
             string wiiupath = findWiiUPath();
-            (var wiiufolderName, var wiiufolderDateTime) = readWiiUFolder(wiiupath + "\\logs\\", 1000);
-
+            (var wiiufolderName, var wiiufolderDateTime) = rf.readWiiUFolder(wiiupath + "\\logs\\", 1000);
+            if (wiiufolderName.Length == 0)
+            {
+                MessageBox.Show("Please enter a valid IP address", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             List<NameDate> nd = new List<NameDate>();
             for (int i = 0; i < wiiufolderName.Length; i++)
             {
@@ -611,6 +438,31 @@ namespace WWHDR_configloader
                 }
             }
         }
+
+        void FileRViewLoad()
+        {
+			ready = false;
+            fileRep.Items.Clear();
+            fileRep.SelectedItems.Clear();
+
+            if (Properties.Settings.Default.customFiles != null)
+			{
+                Properties.Settings.Default.customFiles.ForEach(line =>
+				{
+
+					var wiiufile = line.Split('|')[0];
+					var pcfile = line.Split('|')[1];
+                    bool check = (line.Split('|')[2].ToUpper() == "TRUE");
+                    string[] row = { wiiufile, pcfile };
+					var item = new ListViewItem(row);
+					item.Checked = check;
+                    fileRep.Items.Add(item);
+
+				});
+			}
+			ready = true;
+        }
+
         void FetchSpoilerLogsPC()
         {
             listViewSpoiler.Items.Clear();
@@ -633,6 +485,7 @@ namespace WWHDR_configloader
                 {
                     string[] row = { nd[i].Name, nd[i].Date.ToString().Substring(0, nd[i].Date.ToString().Length - 3) };
                     var listViewItem = new ListViewItem(row);
+					
                     listViewSpoiler.Items.Add(listViewItem);
                     
                 }
@@ -665,7 +518,7 @@ namespace WWHDR_configloader
         }
 
         private void wiiULog_Click(object sender, EventArgs e)
-        {
+        { 
             FetchSpoilerLogsWiiU();
 			spoilerFromWiiU = true;
         }
@@ -683,7 +536,7 @@ namespace WWHDR_configloader
 			{
 				foreach(int index in listViewSpoiler.SelectedIndices)
 				{
-					download(findWiiUPath()+"\\logs\\"+listViewSpoiler.Items[index].Text, System.IO.Path.GetTempPath() + "\\" + listViewSpoiler.Items[index].Text);
+					rf.download(findWiiUPath()+"\\logs\\"+listViewSpoiler.Items[index].Text, System.IO.Path.GetTempPath() + "\\" + listViewSpoiler.Items[index].Text);
                     System.Diagnostics.Process.Start(System.IO.Path.GetTempPath() + "\\" + listViewSpoiler.Items[index].Text);
 
                 }
@@ -705,7 +558,7 @@ namespace WWHDR_configloader
                 foreach (int index in listViewSpoiler.SelectedIndices)
                 {
 					Console.WriteLine(index.ToString());
-					delete(findWiiUPath() + "\\logs\\" + listViewSpoiler.Items[index].Text);
+					rf.delete(findWiiUPath() + "\\logs\\" + listViewSpoiler.Items[index].Text);
                 }
 				FetchSpoilerLogsWiiU();
             }
@@ -734,6 +587,221 @@ namespace WWHDR_configloader
                 Properties.Settings.Default.Save();
             }
 
+        }
+
+        private void spoilerLogSwitch_Click(object sender, EventArgs e)
+        {
+            spoilerLog.Visible = true;
+			fileRepView.Visible = false;
+            Properties.Settings.Default.tab = "spoiler";
+            Properties.Settings.Default.Save();
+        }
+
+        private void fileRepToggle_Click(object sender, EventArgs e)
+        {
+			patchMessage.Text = "";
+            spoilerLog.Visible = false;
+            fileRepView.Visible = true;
+            Properties.Settings.Default.tab = "patch";
+			if (!Properties.Settings.Default.disclaimer)
+			{
+				var confirmResult = MessageBox.Show("Warning! This tab allows you to modify game files, and will directly modify NAND/USB files. " +
+												"Always double check you're not messing with the wrong files before adding patches! " +
+												"Do you still want to continue?",
+									 "Warning!",
+                                     MessageBoxButtons.YesNo);
+				if (confirmResult == DialogResult.Yes)
+				{
+                    Properties.Settings.Default.disclaimer = true;
+                    fileRepView.Enabled = true;
+				}
+				else
+				{
+                    Properties.Settings.Default.disclaimer = false;
+				}
+
+			}
+            Properties.Settings.Default.Save();
+
+        }
+
+        public void addFile(string wiiuPath, string pcPath, FileSelecter f)
+		{
+			f.Hide();
+			if(Properties.Settings.Default.customFiles == null)
+			{
+				Properties.Settings.Default.customFiles = new List<string>();
+
+            }
+            Properties.Settings.Default.customFiles.Add(wiiuPath + "|" + pcPath + "|" + "true");
+			Properties.Settings.Default.Save();
+
+			FileRViewLoad();
+        }
+
+        private void fileRep_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fileRep.SelectedItems.Count > 0)
+            {
+                removePatch.Enabled = true;
+                if (fileRep.SelectedItems[0].Checked)
+                {
+                    patchOne.Enabled = true;
+                }
+                else
+                {
+                    patchOne.Enabled = false;
+                }
+            }
+            else
+            {
+                removePatch.Enabled = false;
+                patchOne.Enabled = false;
+            }
+        }
+        private void fileRep_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+			if (ready)
+			{
+                if (fileRep.SelectedItems.Count > 0 && fileRep.SelectedItems[0].Checked)
+                {
+                    patchOne.Enabled = true;
+                }
+                else
+                {
+                    patchOne.Enabled = false;
+                }
+                var wiiufile = Properties.Settings.Default.customFiles[e.Item.Index].Split('|')[0];
+                var pcfile = Properties.Settings.Default.customFiles[e.Item.Index].Split('|')[1];
+                Properties.Settings.Default.customFiles[e.Item.Index] = wiiufile + "|" + pcfile + "|" + e.Item.Checked.ToString();
+                Properties.Settings.Default.Save();
+			}
+            
+        }
+
+        private void update_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.disclaimer = false;
+            Properties.Settings.Default.customFiles.Clear();
+            Properties.Settings.Default.Save();
+        }
+
+        private void addPatch_Click(object sender, EventArgs e)
+        {
+			if (!rf.checkInstall())
+			{
+				return;
+			}
+            FileRViewLoad();
+            FileSelecter f = new FileSelecter(this);
+            f.Show();
+        }
+
+        private void removePatch_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.customFiles.RemoveAt(fileRep.SelectedItems[0].Index);
+            Properties.Settings.Default.Save();
+            removePatch.Enabled = false;
+            patchOne.Enabled = false;
+            FileRViewLoad();
+        }
+
+        private void patchAll_Click(object sender, EventArgs e)
+        {
+            if (!rf.checkInstall())
+            {
+                return;
+            }
+            var install = "/storage_mlc/usr/title/00050000/10143599";
+            if (Properties.Settings.Default.gameinstall == "usb")
+            {
+                install = "/storage_usb/usr/title/00050000/10143599";
+            }
+            foreach (ListViewItem patch in fileRep.Items)
+            {
+                patchMessage.ForeColor = Color.Black;
+				patchMessage.Text = "Patching...";
+                if (!patch.Checked)
+				{
+					continue;
+				}
+				if (!File.Exists(patch.SubItems[1].Text))
+				{
+					MessageBox.Show("File " + patch.SubItems[1].Text + " does not exists.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					continue;
+				}
+                
+                if (rf.delete(install + patch.SubItems[0].Text) == true)
+				{
+					rf.upload(install + patch.SubItems[0].Text, patch.SubItems[1].Text);
+
+				}
+				else
+				{
+                    MessageBox.Show("File at " + patch.SubItems[1].Text + " does not exists.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					continue;
+                }
+                
+            }
+            patchMessage.ForeColor = Color.Green;
+            patchMessage.Text = "Successfully patched the files!";
+
+        }
+
+		private void patchOne_Click(object sender, EventArgs e)
+		{
+            if (!rf.checkInstall())
+            {
+                return;
+            }
+            var install = "/storage_mlc/usr/title/00050000/10143599";
+			if (Properties.Settings.Default.gameinstall == "usb")
+			{
+				install = "/storage_usb/usr/title/00050000/10143599";
+            }
+            if (!fileRep.SelectedItems[0].Checked)
+            {
+                return;
+            }
+            if (!File.Exists(fileRep.SelectedItems[0].SubItems[1].Text))
+            {
+                MessageBox.Show("File " + fileRep.SelectedItems[0].SubItems[1].Text + " does not exists.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            patchMessage.ForeColor = Color.Black;
+            patchMessage.Text = "Patching " + fileRep.SelectedItems[0].Text;
+
+            if (rf.delete(install + fileRep.SelectedItems[0].SubItems[0].Text) == true)
+            {
+                rf.upload(install + fileRep.SelectedItems[0].SubItems[0].Text, fileRep.SelectedItems[0].SubItems[1].Text);
+
+            }
+            else
+            {
+                MessageBox.Show("File at " + fileRep.SelectedItems[0].SubItems[1].Text + " does not exists.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            patchMessage.ForeColor = Color.Green;
+            patchMessage.Text = "Successfully patched the files!";
+        }
+
+        private void gameInstall_SelectedIndexChanged(object sender, EventArgs e)
+        {
+			if (gameInstall.SelectedIndex == 0)
+			{
+                Properties.Settings.Default.gameinstall = "nand";
+			}
+			else if (gameInstall.SelectedIndex == 1)
+			{
+                Properties.Settings.Default.gameinstall = "usb";
+            }
+            Properties.Settings.Default.Save();
+        }
+
+        private void settings_Click(object sender, EventArgs e)
+        {
+            Settings s = new Settings(this);
+            s.ShowDialog();
         }
     }
 }

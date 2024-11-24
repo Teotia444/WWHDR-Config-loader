@@ -50,12 +50,12 @@ namespace WWHDR_configloader.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool spoilerLogView {
+        public bool advancedView {
             get {
-                return ((bool)(this["spoilerLogView"]));
+                return ((bool)(this["advancedView"]));
             }
             set {
-                this["spoilerLogView"] = value;
+                this["advancedView"] = value;
             }
         }
         
@@ -104,6 +104,65 @@ namespace WWHDR_configloader.Properties {
             }
             set {
                 this["pref"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Generic.List<System.String> customFiles {
+            get {
+                return ((global::System.Collections.Generic.List<System.String>)(this["customFiles"]));
+            }
+            set {
+                this["customFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool disclaimer {
+            get {
+                return ((bool)(this["disclaimer"]));
+            }
+            set {
+                this["disclaimer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("spoiler")]
+        public string tab {
+            get {
+                return ((string)(this["tab"]));
+            }
+            set {
+                this["tab"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("usb")]
+        public string gameinstall {
+            get {
+                return ((string)(this["gameinstall"]));
+            }
+            set {
+                this["gameinstall"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool update {
+            get {
+                return ((bool)(this["update"]));
+            }
+            set {
+                this["update"] = value;
             }
         }
     }
