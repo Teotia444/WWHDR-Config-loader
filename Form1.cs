@@ -1,4 +1,5 @@
-﻿using Octokit;
+﻿
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using WWHDR_configloader.Properties;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -26,8 +28,7 @@ namespace WWHDR_configloader
 
         string version = "0.6.0";
 
-
-		int ogSizeX = 328;
+        int ogSizeX = 328;
 		int ogSizeY = 487;
 		int mdSizeX = 890;
 		int mdSizeY = 487;
@@ -36,14 +37,16 @@ namespace WWHDR_configloader
 		bool spoilerFromWiiU = false;
 		bool ready = false;
 
+        float timer = 0;
+
 		ReadFolder rf;
 
-		public Form1()
-		{
-			InitializeComponent();
-			rf = new ReadFolder();
-		}
-
+        public Form1()
+        {
+            InitializeComponent();
+            rf = new ReadFolder();
+            
+        }
 		private void button3_Click(object sender, EventArgs e)
 		{
 			if (fileDialog.ShowDialog() == DialogResult.OK)
@@ -107,6 +110,7 @@ namespace WWHDR_configloader
 			else
 			{
 				message.Text = "The Wii U responded correctly!";
+                timer1.Start();
 			}
 		}
 
@@ -148,7 +152,8 @@ namespace WWHDR_configloader
             
 
             message.Text = "Successfully recieved the file!";
-		}
+            timer1.Start();
+        }
 
 		string removeLastDir(string path)
 		{
@@ -210,7 +215,8 @@ namespace WWHDR_configloader
             }
 
             message.Text = "Successfully sent the file!";
-		}
+            timer1.Start();
+        }
 
 		private void wiiuIpTextbox_TextChanged(object sender, EventArgs e)
 		{
@@ -591,6 +597,7 @@ namespace WWHDR_configloader
 
         private void spoilerLogSwitch_Click(object sender, EventArgs e)
         {
+            
             spoilerLog.Visible = true;
 			fileRepView.Visible = false;
             Properties.Settings.Default.tab = "spoiler";
@@ -688,7 +695,7 @@ namespace WWHDR_configloader
 
         private void addPatch_Click(object sender, EventArgs e)
         {
-			if (!rf.checkInstall())
+			if (!rf.checkInstall(gameInstall.SelectedIndex))
 			{
 				return;
 			}
@@ -708,7 +715,7 @@ namespace WWHDR_configloader
 
         private void patchAll_Click(object sender, EventArgs e)
         {
-            if (!rf.checkInstall())
+            if (!rf.checkInstall(gameInstall.SelectedIndex))
             {
                 return;
             }
@@ -721,6 +728,7 @@ namespace WWHDR_configloader
             {
                 patchMessage.ForeColor = Color.Black;
 				patchMessage.Text = "Patching...";
+                
                 if (!patch.Checked)
 				{
 					continue;
@@ -745,12 +753,13 @@ namespace WWHDR_configloader
             }
             patchMessage.ForeColor = Color.Green;
             patchMessage.Text = "Successfully patched the files!";
+            timer1.Start();
 
         }
 
 		private void patchOne_Click(object sender, EventArgs e)
 		{
-            if (!rf.checkInstall())
+            if (!rf.checkInstall(gameInstall.SelectedIndex))
             {
                 return;
             }
@@ -770,6 +779,7 @@ namespace WWHDR_configloader
             }
             patchMessage.ForeColor = Color.Black;
             patchMessage.Text = "Patching " + fileRep.SelectedItems[0].Text;
+            
 
             if (rf.delete(install + fileRep.SelectedItems[0].SubItems[0].Text) == true)
             {
@@ -783,6 +793,7 @@ namespace WWHDR_configloader
             }
             patchMessage.ForeColor = Color.Green;
             patchMessage.Text = "Successfully patched the files!";
+            timer1.Start();
         }
 
         private void gameInstall_SelectedIndexChanged(object sender, EventArgs e)
@@ -800,8 +811,22 @@ namespace WWHDR_configloader
 
         private void settings_Click(object sender, EventArgs e)
         {
+            MessageBox.Show(timer.ToString());
             Settings s = new Settings(this);
             s.ShowDialog();
+            
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            timer += timer1.Interval * 0.001f;
+            if(timer > 4)
+            {
+                message.Text = "";
+                patchMessage.Text = "";
+                timer = 0;
+                timer1.Stop();
+            }
         }
     }
 }

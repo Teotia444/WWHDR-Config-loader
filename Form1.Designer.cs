@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.wiiuIpTextbox = new System.Windows.Forms.TextBox();
             this.toWiiU = new System.Windows.Forms.Button();
@@ -52,6 +53,7 @@
             this.wiiULog = new System.Windows.Forms.Button();
             this.pcLog = new System.Windows.Forms.Button();
             this.fileRepView = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.gameInstall = new System.Windows.Forms.ComboBox();
             this.patchMessage = new System.Windows.Forms.Label();
@@ -73,7 +75,7 @@
             this.spoilerLogSwitch = new System.Windows.Forms.Button();
             this.fileRepToggle = new System.Windows.Forms.Button();
             this.settings = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.spoilerLog.SuspendLayout();
             this.fileRepView.SuspendLayout();
             this.SuspendLayout();
@@ -315,6 +317,16 @@
             this.fileRepView.TabStop = false;
             this.fileRepView.Text = "File Replacement";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 25);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(253, 26);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "You need to have the \"Allow access to system files\"\r\nenabled in ftpiiu in order t" +
+    "o use this tab.";
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -475,20 +487,15 @@
             this.settings.UseVisualStyleBackColor = true;
             this.settings.Click += new System.EventHandler(this.settings_Click);
             // 
-            // label5
+            // timer1
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 25);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(253, 26);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "You need to have the \"Allow access to system files\"\r\nenabled in ftpiiu in order t" +
-    "o use this tab.";
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(874, 446);
             this.Controls.Add(this.fileRepView);
             this.Controls.Add(this.settings);
@@ -572,6 +579,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox gameInstall;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

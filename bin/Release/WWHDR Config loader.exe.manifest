@@ -15,16 +15,16 @@
       </applicationRequestMinimum>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
         <!--
-          Options de manifeste UAC
-          Pour changer le niveau du contrôle de compte d'utilisateur Windows, remplacez le
-          nœud requestedExecutionLevel par l'une des propositions suivantes.
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the
+          requestedExecutionLevel node with one of the following.
 
         <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
         <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
         <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
 
-         Pour utiliser la virtualisation des fichiers et du Registre afin d'assurer
-         une compatibilité ascendante, supprimez le nœud requestedExecutionLevel.
+         If you want to utilize File and Registry Virtualization for backward
+         compatibility then delete the requestedExecutionLevel node.
     -->
         <requestedExecutionLevel level="asInvoker" uiAccess="false" />
       </requestedPrivileges>
@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WWHDR Config loader.exe" size="1000856">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WWHDR Config loader.exe" size="1001368">
       <assemblyIdentity name="WWHDR Config loader" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Biv652HmWbXN8tA+T8eUQbNFhoZUAFmus8bTDDV0aTg=</dsig:DigestValue>
+        <dsig:DigestValue>EA5GYJc4aSEVNH81MykcI5tyX82KhHTfjoQtwEYFFAs=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

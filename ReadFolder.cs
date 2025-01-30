@@ -272,12 +272,12 @@ namespace WWHDR_configloader
                 return path;
             }
         }
-        public bool checkInstall()
+        public bool checkInstall(int gameInstall)
         {
-            var install = "/storage_mlc/usr/title/00050000/10143599";
-            if (Properties.Settings.Default.gameinstall == "usb")
+            var install = "/storage_usb/usr/title/00050000/10143599";
+            if (gameInstall == 0)
             {
-                install = "/storage_usb/usr/title/00050000/10143599";
+                install = "/storage_mlc/usr/title/00050000/10143599";
             }
             
             (string[] wiiu, List<DateTime> date) = readWiiUFolder(removeLastDir(install), 1000);
