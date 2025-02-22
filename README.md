@@ -9,8 +9,9 @@ Follow the steps for both Wii U and PC:
 
 ## Using
 ### Basic uses (tranfering config, preferences, plando file...)
-* **Make sure the app from which the transfer tool will send the file has been closed at least once after having made your settings before using this app! Otherwise, your config might not save properly** 
-* **Make sure the app that will be recieving the config file is closed! Otherwise, your config might not load properly**
+* **Make sure the app from which the transfer tool will send the file has been closed at least once after having made your settings before using this app! Your config file doesn't get saved until the app closes.** 
+* **Make sure the app that will be recieving the config file is closed! The config file only loads on the start of the app.**
+* *Ideally, both apps are closed as you send the files* 
 * *Example : For sending a config file from your computer to your Wii U, you should have closed the PC rando app at least once after having made your settings (so that the files gets saved properly) AND you should have closed the Wii U rando app and not reopen it before the config transfer tool has done its job*
 * Using FTPiiU, find the local IP address of the Wii U (L + DPAD DOWN + MINUS will open the plugin menu -> navigate to the FTPiiU plugin). It should look something like :
 ```
